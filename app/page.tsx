@@ -1,10 +1,11 @@
-import { ModeToggle } from '@/components/ui/theme-toggle';
+import { HeroHeader } from '@/components/header';
+import HeroSection from '@/components/hero-section';
 
 export default function Home() {
   return (
-    <div className="">
-      <h1>Hello</h1>
-      <ModeToggle />
+    <div>
+      <HeroHeader />
+      <HeroSection />
     </div>
   );
 }
