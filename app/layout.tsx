@@ -1,8 +1,11 @@
+import { AuthProvider } from '@/components/ui/AuthProvider';
+import { Toaster } from '@/components/ui/sonner';
+import '@/lib/orpc.server'; // for pre-rendering
+import { Providers } from '@/lib/providers';
+import { ThemeProvider } from '@/lib/theme-provider';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { ThemeProvider } from '@/lib/theme-provider';
-import { AuthProvider } from '@/components/ui/AuthProvider';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,7 +39,8 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {children}
+            <Providers>{children}</Providers>
+            <Toaster closeButton position="top-center" />
           </ThemeProvider>
         </body>
       </html>

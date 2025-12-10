@@ -1,3 +1,5 @@
+'use client';
+
 import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,21 +11,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { getAvatar } from '@/lib/get-avatar';
+import { orpc } from '@/lib/orpc';
 import {
   LogoutLink,
   PortalLink,
 } from '@kinde-oss/kinde-auth-nextjs/components';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { AvatarFallback } from '@radix-ui/react-avatar';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { CreditCardIcon, LogOutIcon, UserIcon } from 'lucide-react';
 
-const UserNav = async () => {
-  const { getUser } = await getKindeServerSession();
-  const user = await getUser();
-
-  if (user == null) {
-    return null;
-  }
+const UserNav = () => {
+  const {
+    data: { user },
+  } = useSuspenseQuery(orpc.workspace.list.queryOptions());
 
   return (
     <DropdownMenu>
@@ -35,7 +36,7 @@ const UserNav = async () => {
         >
           <Avatar className="flex items-center justify-center">
             <AvatarImage
-              src={user.picture ?? ''}
+              src={getAvatar(user.picture, user.email!)}
               alt="User image"
               className="object-cover"
             />
@@ -55,7 +56,7 @@ const UserNav = async () => {
         <DropdownMenuLabel className="font-normal flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <Avatar className="relative size-8 rounded-lg">
             <AvatarImage
-              src={user.picture ?? ''}
+              src={getAvatar(user.picture, user.email!)}
               alt="User image"
               className="object-cover"
             />

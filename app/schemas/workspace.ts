@@ -6,3 +6,5 @@ export const workspaceSchema = z.object({
     .min(3, 'Name must be at least 3 characters long')
     .max(50, 'Name must be at most 50 characters long'),
 });
+
+export type WorkspaceSchemaType = z.infer<typeof workspaceSchema>;
