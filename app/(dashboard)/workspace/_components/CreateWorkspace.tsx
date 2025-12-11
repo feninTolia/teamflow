@@ -26,6 +26,7 @@ import {
 } from '@/components/ui/tooltip';
 import { orpc } from '@/lib/orpc';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { isDefinedError } from '@orpc/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
@@ -57,8 +58,18 @@ const CreateWorkspace = () => {
         setIsOpen(false);
       },
 
-      onError() {
-        toast('Failed to create workspace, please try again');
+      onError(error) {
+        if (isDefinedError(error)) {
+          if (error.code === 'RATE_LIMITED') {
+            toast.error(error.message);
+            return;
+          }
+
+          toast.error(error.message);
+          return;
+        }
+
+        toast.error('Failed to create workspace, please try again');
       },
     })
   );

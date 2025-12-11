@@ -1,11 +1,13 @@
-import { requireAuthMiddleware } from '@/app/router/auth';
+import { heavyWriteSecurityMiddleware } from '@/app/middlewares/arcjet/heavy-write';
+import { standardSecurityMiddleware } from '@/app/middlewares/arcjet/standard';
+import { requireAuthMiddleware } from '@/app/middlewares/auth';
 import { base } from '@/app/middlewares/base';
 import { requiredWorkspaceMiddleware } from '@/app/middlewares/workspace';
+import { workspaceSchema } from '@/app/schemas/workspace';
 import { KindeOrganization, KindeUser } from '@kinde-oss/kinde-auth-nextjs';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { init, Organizations } from '@kinde/management-api-js';
 import { z } from 'zod';
-import { workspaceSchema } from '../schemas/workspace';
 
 export const listWorkspaces = base
   .use(requireAuthMiddleware)
@@ -53,6 +55,8 @@ export const listWorkspaces = base
 export const createWorkspace = base
   .use(requireAuthMiddleware)
   .use(requiredWorkspaceMiddleware)
+  .use(standardSecurityMiddleware)
+  .use(heavyWriteSecurityMiddleware)
   .route({
     method: 'POST',
     path: '/workspace',
