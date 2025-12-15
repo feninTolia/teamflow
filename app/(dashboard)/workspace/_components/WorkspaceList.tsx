@@ -46,7 +46,10 @@ const WorkspaceList = () => {
           return (
             <Tooltip key={ws.id}>
               <TooltipTrigger asChild>
-                <LoginLink orgCode={ws.id}>
+                <LoginLink
+                  orgCode={ws.id}
+                  postLoginRedirectURL={`/workspace/${ws.id}`}
+                >
                   <Button
                     size="icon"
                     className={cn(
