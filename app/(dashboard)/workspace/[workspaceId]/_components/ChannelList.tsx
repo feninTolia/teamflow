@@ -1,31 +1,19 @@
+'use client';
+
 import { buttonVariants } from '@/components/ui/button';
+import { orpc } from '@/lib/orpc';
 import { cn } from '@/lib/utils';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { HashIcon } from 'lucide-react';
 import Link from 'next/link';
 
-const CHNNEL_LIST = [
-  {
-    id: 1,
-    name: 'General',
-  },
-  {
-    id: 2,
-    name: 'Announcements',
-  },
-  {
-    id: 3,
-    name: 'Feedback',
-  },
-  {
-    id: 4,
-    name: 'Random',
-  },
-];
-
 const ChannelList = () => {
+  const {
+    data: { channels },
+  } = useSuspenseQuery(orpc.channel.list.queryOptions());
   return (
     <div className="space-y-0.5 py-1">
-      {CHNNEL_LIST.map((channel) => (
+      {channels.map((channel) => (
         <Link
           key={channel.id}
           href={'#'}

@@ -20,6 +20,7 @@ import {
 import { AvatarFallback } from '@radix-ui/react-avatar';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { CreditCardIcon, LogOutIcon, UserIcon } from 'lucide-react';
+import Image from 'next/image';
 
 const UserNav = () => {
   const {
@@ -35,10 +36,16 @@ const UserNav = () => {
           className="rounded-full hover:scale-105 hover:border-accent"
         >
           <Avatar className="flex items-center justify-center">
-            <AvatarImage
+            {/* <AvatarImage
               src={getAvatar(user.picture, user.email!)}
               alt="User image"
               className="object-cover"
+            /> */}
+            <Image
+              src={getAvatar(user.picture, user.email!)}
+              alt="User image"
+              className="object-cover"
+              fill
             />
             <AvatarFallback>
               {user.given_name?.slice(0, 2).toUpperCase()}

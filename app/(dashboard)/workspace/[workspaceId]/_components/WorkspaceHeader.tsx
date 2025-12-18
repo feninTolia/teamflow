@@ -5,7 +5,7 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 const WorkspaceHeader = () => {
   const {
     data: { currentWorkspace },
-  } = useSuspenseQuery(orpc.workspace.list.queryOptions()); //TODO
+  } = useSuspenseQuery(orpc.channel.list.queryOptions());
 
   return <h2 className="text-2xl font-bold">{currentWorkspace.orgName}</h2>;
 };
