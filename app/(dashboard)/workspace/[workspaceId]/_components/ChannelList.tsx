@@ -16,7 +16,7 @@ const ChannelList = () => {
       {channels.map((channel) => (
         <Link
           key={channel.id}
-          href={'#'}
+          href={`/workspace/${channel.workspaceId}/channel/${channel.id}`}
           className={buttonVariants({
             variant: 'ghost',
             className: cn(
