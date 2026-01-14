@@ -3,9 +3,9 @@ import { orpc } from '@/lib/orpc';
 import { useSuspenseQuery } from '@tanstack/react-query';
 
 const ChannelHeader = () => {
-  //   const {
-  //     data: { channels },
-  //   } = useSuspenseQuery(orpc.channel.list.queryOptions());
+  // const {
+  //   data: { channels },
+  // } = useSuspenseQuery(orpc.channel.list.queryOptions());
 
   return (
     <div className="flex items-center justify-between h-14 px-4 border-b">
