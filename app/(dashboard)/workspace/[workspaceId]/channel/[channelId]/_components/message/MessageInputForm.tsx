@@ -36,9 +36,12 @@ const MessageInputForm = ({ channelId }: Props) => {
   const createMessageMutation = useMutation(
     orpc.message.create.mutationOptions({
       onSuccess: () => {
+        form.reset(); //!TODO: reset editor
+
         queryClient.invalidateQueries({
           queryKey: orpc.message.list.key(),
         });
+
         return toast.success('Message sent successfully');
       },
       onError: () => {
@@ -53,7 +56,7 @@ const MessageInputForm = ({ channelId }: Props) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form>
         <FormField
           control={form.control}
           name="content"
