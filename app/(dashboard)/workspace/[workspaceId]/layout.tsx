@@ -22,7 +22,7 @@ const ChannelListLayout = async ({
 
   return (
     <>
-      <div className="flex h-full w-80 flex-col bg-secondary border-r border-border">
+      <div className="flex h-full w-80 flex-col  border-r border-border">
         {/* Header */}
         <div className="flex items-center px-4 h-14 border-b border-border">
           <HydrateClient client={queryClient}>

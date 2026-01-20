@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { MessageItem } from './message/MessageItem';
 import { Button } from '@/components/ui/button';
-import { ArrowDown, ArrowDownIcon, ChevronDownIcon } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 
 const MessagesList = () => {
   const { channelId } = useParams<{ channelId: string }>();

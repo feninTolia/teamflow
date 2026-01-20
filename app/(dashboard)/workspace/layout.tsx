@@ -11,7 +11,7 @@ const WorkspaceLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="flex w-full h-screen">
-      <div className="flex h-full w-16 flex-col gap-4  items-center bg-secondary py-3 px-2 border-r box-border">
+      <div className="flex h-full w-16 flex-col gap-4 items-center py-3 px-2 border-r box-border">
         <HydrateClient client={queryClient}>
           <WorkspaceList />
         </HydrateClient>
