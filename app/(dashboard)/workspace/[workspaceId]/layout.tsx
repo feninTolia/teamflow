@@ -39,7 +39,7 @@ const ChannelListLayout = async ({
           <Collapsible defaultOpen>
             <CollapsibleTrigger
               className="flex w-full items-center justify-between px-2 py-1 text-sm font-medium text-muted-foreground 
-            hover:text-accent-foreground [&[data-state=open]>svg]:rotate-180"
+            hover:text-foreground hover:cursor-pointer [&[data-state=open]>svg]:rotate-180"
             >
               Main
               <ChevronDownIcon className="size-4 transition-transform duration-200" />
@@ -58,7 +58,7 @@ const ChannelListLayout = async ({
           <Collapsible defaultOpen>
             <CollapsibleTrigger
               className="flex w-full items-center justify-between
-             px-2 py-1 text-sm font-medium text-muted-foreground hover:text-accent-foreground [&[data-state=open]>svg]:rotate-180"
+             px-2 py-1 text-sm font-medium text-muted-foreground hover:text-foreground hover:cursor-pointer [&[data-state=open]>svg]:rotate-180"
             >
               Members
               <ChevronUpIcon className="size-4 transition-transform duration-200" />

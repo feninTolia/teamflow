@@ -16,7 +16,7 @@ export function WorkspaceMembersList() {
       {members.map((member) => (
         <div
           key={member.id}
-          className="flex items-center gap-3 px-3 py-3 hover:bg-accent cursor-pointer transition-colors"
+          className="flex items-center gap-3 px-3 py-3 hover:bg-accent cursor-pointer group"
         >
           <div className="relative">
             <Avatar className="size-8 relative">
@@ -32,9 +32,9 @@ export function WorkspaceMembersList() {
             </Avatar>
           </div>
 
-          <div className="flex-1 min-w-0">
+          <div className="flex-1 min-w-0 ">
             <p className="text-sm font-medium truncate">{member.full_name}</p>
-            <p className="text-xs text-muted-foreground truncate">
+            <p className="text-xs text-muted-foreground truncate group-hover:text-foreground">
               {member.email}
             </p>
           </div>

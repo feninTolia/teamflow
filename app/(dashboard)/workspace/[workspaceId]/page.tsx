@@ -8,7 +8,7 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty';
 import { client } from '@/lib/orpc';
-import { CloudIcon, HashIcon } from 'lucide-react';
+import { HashIcon } from 'lucide-react';
 import { redirect } from 'next/navigation';
 import CreateNewChannel from './_components/CreateNewChannel';
 
@@ -21,7 +21,7 @@ const WorkspaceIdPage = async ({ params }: IAppProps) => {
 
   if (channels.length > 0) {
     return redirect(
-      `/workspace/${(await params).workspaceId}/channel/${channels[0].id}`
+      `/workspace/${(await params).workspaceId}/channel/${channels[0].id}`,
     );
   }
   return (

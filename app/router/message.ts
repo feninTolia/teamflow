@@ -37,7 +37,7 @@ export const createMessage = base
         ...input,
         authorId: context.user.id,
         authorEmail: context.user.email!,
-        authorName: context.user.username ?? 'John Doe',
+        authorName: context.user.given_name ?? 'John Doe',
         authorAvatar: getAvatar(context.user.picture, context.user.email!),
         channelId: input.channelId,
       },
@@ -62,13 +62,13 @@ export const listMessages = base
       channelId: z.string(),
       limit: z.number().min(1).max(100).optional(),
       cursor: z.string().optional(),
-    })
+    }),
   )
   .output(
     z.object({
       items: z.array(z.custom<Message>()),
       nextCursor: z.string().optional(),
-    })
+    }),
   )
   .handler(async ({ context, input, errors }) => {
     const channel = await prisma.channel.findFirst({

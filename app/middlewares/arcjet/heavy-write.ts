@@ -9,7 +9,7 @@ const buildStandartAj = () =>
       mode: 'LIVE',
       interval: '1m',
       max: 2,
-    })
+    }),
   );
 
 export const heavyWriteSecurityMiddleware = base
