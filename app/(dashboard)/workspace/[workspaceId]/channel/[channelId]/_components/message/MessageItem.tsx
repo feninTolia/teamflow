@@ -1,14 +1,19 @@
 import { SafeContent } from '@/components/rich-text-editor/SafeContent';
 import { Message } from '@/lib/generated/prisma/client';
 import { getAvatar } from '@/lib/get-avatar';
-import { Divide } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
+import { EditMessage } from '../toolbar/EditMessage';
+import { MessageHoverToolbar } from '../toolbar/MessageHoverToolbar';
 
 type Props = {
   message: Message;
+  currentUserId: string;
 };
 
-export const MessageItem = ({ message }: Props) => {
+export const MessageItem = ({ message, currentUserId }: Props) => {
+  const [isEditing, setIsEditing] = useState(false);
+
   return (
     <div className="flex space-x-3 relative p-3 rounded-lg group hover:bg-muted/50">
       <Image
@@ -36,23 +41,41 @@ export const MessageItem = ({ message }: Props) => {
           </p>
         </div>
 
-        <SafeContent
-          className="text-sm wrap-break-word prose dark:prose-invert max-w-none marker:text-primary"
-          content={JSON.parse(message.content)}
-        />
-
-        {message.imageUrl && (
-          <div className="mt-2">
-            <Image
-              src={message.imageUrl}
-              alt="Message attachment"
-              width={512}
-              height={512}
-              className=" max-h-[320px] w-auto object-contain "
+        {isEditing ? (
+          <EditMessage
+            message={message}
+            onCancel={() => setIsEditing(false)}
+            onSave={() => setIsEditing(false)}
+          />
+        ) : (
+          <>
+            <SafeContent
+              className="text-sm wrap-break-word prose dark:prose-invert max-w-none marker:text-primary"
+              content={JSON.parse(message.content)}
             />
-          </div>
+
+            {message.imageUrl && (
+              <div className="mt-2">
+                <Image
+                  src={message.imageUrl}
+                  alt="Message attachment"
+                  width={512}
+                  height={512}
+                  className="max-h-[320px] w-auto object-contain "
+                />
+              </div>
+            )}
+          </>
         )}
       </div>
+
+      {!isEditing && (
+        <MessageHoverToolbar
+          messageId={message.id}
+          onEdit={() => setIsEditing(true)}
+          canEdit={message.authorId === currentUserId}
+        />
+      )}
     </div>
   );
 };

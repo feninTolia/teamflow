@@ -2,7 +2,7 @@
 import EmptyState from '@/components/general/EmptyState';
 import { Button } from '@/components/ui/button';
 import { orpc } from '@/lib/orpc';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { ChevronDownIcon, ChevronsDownIcon, Loader2Icon } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -16,6 +16,8 @@ const MessagesList = () => {
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isNewMessages, setIsNewMessages] = useState(false);
   const lastItemIdRef = useRef<string | undefined>(undefined);
+
+  const { data: user } = useSuspenseQuery(orpc.workspace.list.queryOptions());
 
   const infiniteOptions = orpc.message.list.infiniteOptions({
     input: (pageParam: string | undefined) => ({
@@ -189,7 +191,11 @@ const MessagesList = () => {
           </div>
         ) : (
           items.map((message) => (
-            <MessageItem key={message.id} message={message} />
+            <MessageItem
+              key={message.id}
+              message={message}
+              currentUserId={user.user.id}
+            />
           ))
         )}
 
