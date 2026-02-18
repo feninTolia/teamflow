@@ -167,7 +167,7 @@ const MessagesList = () => {
 
     if (!el) return;
 
-    bottomRef.current?.scrollIntoView({ block: 'end' });
+    bottomRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
 
     setIsNewMessages(false);
     setIsAtBottom(true);

@@ -1,18 +1,34 @@
 import { SafeContent } from '@/components/rich-text-editor/SafeContent';
-import { Message } from '@/lib/generated/prisma/client';
 import { getAvatar } from '@/lib/get-avatar';
+import { orpc } from '@/lib/orpc';
+import { MessageListItem } from '@/lib/types';
+import { useThread } from '@/providers/ThreadProvider';
+import { MessageSquareIcon } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { EditMessage } from '../toolbar/EditMessage';
 import { MessageHoverToolbar } from '../toolbar/MessageHoverToolbar';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
-  message: Message;
+  message: MessageListItem;
   currentUserId: string;
 };
 
 export const MessageItem = ({ message, currentUserId }: Props) => {
   const [isEditing, setIsEditing] = useState(false);
+  const { openThread } = useThread();
+  const queryClient = useQueryClient();
+
+  const prefetchThread = useCallback(() => {
+    const options = orpc.message.thread.list.queryOptions({
+      input: { messageId: message.id },
+    });
+
+    queryClient
+      .prefetchQuery({ ...options, staleTime: 60_000 })
+      .catch(() => {});
+  }, [message.id, queryClient]);
 
   return (
     <div className="flex space-x-3 relative p-3 rounded-lg group hover:bg-muted/50">
@@ -64,6 +80,23 @@ export const MessageItem = ({ message, currentUserId }: Props) => {
                   className="max-h-[320px] w-auto object-contain "
                 />
               </div>
+            )}
+
+            {message.repliesCount > 0 && (
+              <button
+                onClick={() => openThread(message.id)}
+                onMouseEnter={prefetchThread}
+                onFocus={prefetchThread}
+                type="button"
+                className="mt-1 cursor-pointer text-xs text-accent inline-flex items-center gap-1 hover:text-foreground 
+                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              >
+                <MessageSquareIcon className="size-3.5" />
+                <span>
+                  {message.repliesCount}{' '}
+                  {message.repliesCount === 1 ? 'reply' : 'replies'}
+                </span>
+              </button>
             )}
           </>
         )}

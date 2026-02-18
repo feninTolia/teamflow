@@ -26,11 +26,11 @@ export const listWorkspaces = base
           id: z.string(),
           name: z.string(),
           avatar: z.string(),
-        })
+        }),
       ),
       user: z.custom<KindeUser<Record<string, unknown>>>(),
       currentWorkspace: z.custom<KindeOrganization<unknown>>(),
-    })
+    }),
   )
   .handler(async ({ context, errors }) => {
     const { getUserOrganizations } = getKindeServerSession();
@@ -68,7 +68,7 @@ export const createWorkspace = base
     z.object({
       orgCode: z.string(),
       workspaceName: z.string(),
-    })
+    }),
   )
   .handler(async ({ context, errors, input }) => {
     init();

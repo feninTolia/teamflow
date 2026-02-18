@@ -7,9 +7,13 @@ import { useParams } from 'next/navigation';
 import ChannelHeader from './_components/ChannelHeader';
 import MessageInputForm from './_components/message/MessageInputForm';
 import MessagesList from './_components/MessagesList';
+import { ThreadSidebar } from './_components/thread/ThreadSidebar';
+import { ThreadProvider, useThread } from '@/providers/ThreadProvider';
 
 const ChannelPageMain = () => {
   const { channelId } = useParams<{ channelId: string }>();
+  const { isThreadOpen } = useThread();
+
   const { data, error, isLoading } = useQuery(
     orpc.channel.get.queryOptions({ input: { channelId } }),
   );
@@ -43,12 +47,26 @@ const ChannelPageMain = () => {
         <div className="border-t bg-background p-4">
           <MessageInputForm
             channelId={channelId}
-            user={data?.currentUser as KindeUser<unknown>}
+            user={data?.currentUser as KindeUser<Record<string, unknown>>}
           />
         </div>
       </div>
+
+      {isThreadOpen && (
+        <ThreadSidebar
+          user={data?.currentUser as KindeUser<Record<string, unknown>>}
+        />
+      )}
     </div>
   );
 };
 
-export default ChannelPageMain;
+const ThisIsTheChannelPage = () => {
+  return (
+    <ThreadProvider>
+      <ChannelPageMain />
+    </ThreadProvider>
+  );
+};
+
+export default ThisIsTheChannelPage;
