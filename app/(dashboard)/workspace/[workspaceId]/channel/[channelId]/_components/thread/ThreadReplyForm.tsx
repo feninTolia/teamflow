@@ -5,9 +5,9 @@ import {
 } from '@/app/schemas/message';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { useAttachmentUpload } from '@/hooks/use-attachment-upload';
-import { Message } from '@/lib/generated/prisma/client';
 import { getAvatar } from '@/lib/get-avatar';
 import { orpc } from '@/lib/orpc';
+import { MessageListItem } from '@/lib/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { KindeUser } from '@kinde-oss/kinde-auth-nextjs';
 import {
@@ -20,8 +20,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import MessageComposer from '../message/MessageComposer';
-import { MessageListItem } from '@/lib/types';
-import { m } from 'motion/react';
 
 type Props = {
   threadId: string;
@@ -61,7 +59,7 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
 
         const previous = queryClient.getQueryData(listOptions.queryKey);
 
-        const optimistic: Message = {
+        const optimistic: MessageListItem = {
           id: `optimistic-${crypto.randomUUID()}`,
           content,
           createdAt: new Date(),
@@ -73,6 +71,8 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
           channelId,
           threadId: threadId!,
           imageUrl: imageUrl ?? null,
+          reactions: [],
+          replyCount: 0,
         };
 
         queryClient.setQueryData(listOptions.queryKey, (old) => {
@@ -91,7 +91,7 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
               ...page,
               items: page.items.map((message) =>
                 message.id === threadId
-                  ? { ...message, repliesCount: message.repliesCount + 1 }
+                  ? { ...message, replyCount: message.replyCount + 1 }
                   : message,
               ),
             }));
@@ -104,7 +104,9 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
       },
 
       onSuccess: (_data, _vars, ctx) => {
-        queryClient.invalidateQueries({ queryKey: ctx.listOptions.queryKey });
+        queryClient.invalidateQueries({
+          queryKey: ctx.listOptions.queryKey,
+        });
 
         form.reset({ channelId, content: '', threadId });
         upload.clear();

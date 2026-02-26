@@ -3,12 +3,13 @@ import { getAvatar } from '@/lib/get-avatar';
 import { orpc } from '@/lib/orpc';
 import { MessageListItem } from '@/lib/types';
 import { useThread } from '@/providers/ThreadProvider';
+import { useQueryClient } from '@tanstack/react-query';
 import { MessageSquareIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useCallback, useState } from 'react';
 import { EditMessage } from '../toolbar/EditMessage';
 import { MessageHoverToolbar } from '../toolbar/MessageHoverToolbar';
-import { useQueryClient } from '@tanstack/react-query';
+import ReactionsBar from '../reactions/RactionsBar';
 
 type Props = {
   message: MessageListItem;
@@ -82,7 +83,13 @@ export const MessageItem = ({ message, currentUserId }: Props) => {
               </div>
             )}
 
-            {message.repliesCount > 0 && (
+            <ReactionsBar
+              messageId={message.id}
+              reactions={message.reactions}
+              context={{ type: 'list', channelId: message.channelId! }}
+            />
+
+            {message.replyCount > 0 && (
               <button
                 onClick={() => openThread(message.id)}
                 onMouseEnter={prefetchThread}
@@ -93,8 +100,8 @@ export const MessageItem = ({ message, currentUserId }: Props) => {
               >
                 <MessageSquareIcon className="size-3.5" />
                 <span>
-                  {message.repliesCount}{' '}
-                  {message.repliesCount === 1 ? 'reply' : 'replies'}
+                  {message.replyCount}{' '}
+                  {message.replyCount === 1 ? 'reply' : 'replies'}
                 </span>
               </button>
             )}

@@ -187,13 +187,17 @@ export const ThreadSidebar = ({ user }: Props) => {
               {/* Thread Replies */}
               <div className="p-2">
                 <p className="text-sm  text-muted-foreground mb-3">
-                  {data.messages.length === 0 ? 0 : data.messages.length - 1}{' '}
-                  replies
+                  {data.messages.length}{' '}
+                  {data.messages.length === 1 ? 'reply' : 'replies'}
                 </p>
 
                 <div className="space-y-1">
-                  {data.messages.slice(1).map((reply) => (
-                    <ThreadReply key={reply.id} reply={reply} />
+                  {data.messages.slice(0).map((reply) => (
+                    <ThreadReply
+                      key={reply.id}
+                      reply={reply}
+                      selectedThreadId={selectedThreadId!}
+                    />
                   ))}
                 </div>
               </div>
