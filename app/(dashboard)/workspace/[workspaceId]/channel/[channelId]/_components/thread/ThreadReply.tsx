@@ -9,6 +9,8 @@ type Props = {
 };
 
 export const ThreadReply = ({ reply, selectedThreadId }: Props) => {
+  console.log('reply', reply);
+
   return (
     <div className="flex space-x-3 p-3 hover:bg-muted/70 rounded-lg">
       <Image
@@ -33,7 +35,7 @@ export const ThreadReply = ({ reply, selectedThreadId }: Props) => {
         </div>
 
         <SafeContent
-          content={JSON.parse(reply.content)}
+          content={JSON?.parse?.(reply?.content)}
           className="text-sm wrap-break-word prose dark:prose-invert max-w-none marker:text-primary"
         />
 

@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ThreadReply } from './ThreadReply';
 import { ThreadReplyForm } from './ThreadReplyForm';
 import ThreadSidebarSkeleton from './ThreadSidebarSkeleton';
+import SummarizeThread from './SummarizeThread';
 
 type Props = {
   user: KindeUser<Record<string, unknown>>;
@@ -132,6 +133,7 @@ export const ThreadSidebar = ({ user }: Props) => {
         </div>
 
         <div className="flex items-center gap-2">
+          <SummarizeThread messageId={selectedThreadId!} />
           <Button
             variant={'outline'}
             size={'icon'}
