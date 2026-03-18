@@ -43,7 +43,7 @@ export const HeroHeader = () => {
           className={cn(
             'mx-auto mt-2 max-w-6xl px-6 transition-all duration-300 lg:px-12',
             isScrolled &&
-              'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5'
+              'bg-background/50 max-w-4xl rounded-2xl border backdrop-blur-lg lg:px-5',
           )}
         >
           <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0 lg:py-4">
@@ -124,7 +124,7 @@ export const HeroHeader = () => {
                       <LoginLink
                         className={cn(
                           buttonVariants({ variant: 'outline', size: 'sm' }),
-                          isScrolled && 'lg:hidden'
+                          isScrolled && 'lg:hidden',
                         )}
                       >
                         Login
@@ -133,20 +133,30 @@ export const HeroHeader = () => {
                       <RegisterLink
                         className={cn(
                           buttonVariants({ size: 'sm' }),
-                          isScrolled && 'lg:hidden'
+                          isScrolled && 'lg:hidden',
                         )}
+                        authUrlParams={{
+                          is_create_org: 'true',
+                          org_name: 'My Workspace',
+                          pricing_table_key: 'organization_plans',
+                        }}
                       >
                         Sign Up
                       </RegisterLink>
 
-                      <LoginLink
+                      <RegisterLink
                         className={cn(
                           buttonVariants({ size: 'sm' }),
-                          isScrolled ? 'lg:inline-flex' : 'hidden'
+                          isScrolled ? 'lg:inline-flex' : 'hidden',
                         )}
+                        authUrlParams={{
+                          is_create_org: 'true',
+                          org_name: 'My Workspace',
+                          pricing_table_key: 'organization_plans',
+                        }}
                       >
                         Get Started
-                      </LoginLink>
+                      </RegisterLink>
                     </>
                   )}
                 </div>
