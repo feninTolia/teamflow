@@ -1,15 +1,46 @@
 'use client';
 
+import { User } from '@/app/schemas/realtime';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { usePresence } from '@/hooks/use-presence';
 import { getAvatar } from '@/lib/get-avatar';
 import { orpc } from '@/lib/orpc';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { cn } from '@/lib/utils';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import { useMemo } from 'react';
 
 export function WorkspaceMembersList() {
   const {
     data: { members },
   } = useSuspenseQuery(orpc.channel.list.queryOptions());
+
+  const { data: workspaceData } = useQuery(orpc.workspace.list.queryOptions());
+
+  const currentUser = useMemo(() => {
+    if (!workspaceData?.user) return null;
+
+    return {
+      id: workspaceData.user.id,
+      full_name: workspaceData.user.given_name,
+      email: workspaceData.user.email ?? '',
+      picture: workspaceData.user.picture,
+    } satisfies User;
+  }, [workspaceData]);
+
+  const params = useParams();
+  const workspaceId = params.workspaceId;
+
+  const { onlineUsers } = usePresence({
+    currentUser: currentUser,
+    room: `workspace-${workspaceId}`,
+  });
+
+  const onlineUsersIds = useMemo(
+    () => new Set(onlineUsers.map((u) => u.id)),
+    [onlineUsers],
+  );
 
   return (
     <div className="space-y-0.5 py-1">
@@ -30,6 +61,16 @@ export function WorkspaceMembersList() {
                 {member.full_name?.charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
+
+            {/* Online/Ofline status indicator */}
+            <div
+              className={cn(
+                'absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-background',
+                member.id && onlineUsersIds.has(member.id)
+                  ? 'bg-green-500'
+                  : 'bg-gray-500',
+              )}
+            ></div>
           </div>
 
           <div className="flex-1 min-w-0 ">

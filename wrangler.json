@@ -1,0 +1,14 @@
+{
+  "name": "teamflow-realtime",
+  "main": "realtime/index.ts",
+  "compatibility_date": "2026-03-18",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "Chat",
+        "class_name": "Chat"
+      }
+    ]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Chat"] }]
+}
