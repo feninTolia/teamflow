@@ -70,7 +70,7 @@ export function WorkspaceMembersList() {
                   ? 'bg-green-500'
                   : 'bg-gray-500',
               )}
-            ></div>
+            />
           </div>
 
           <div className="flex-1 min-w-0 ">

@@ -11,6 +11,7 @@ import {
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import EmojiReaction from './EmojiReaction';
+import { useChannelRealtime } from '@/providers/ChannelRealtimeProvider';
 
 type ThreadContext = {
   type: 'thread';
@@ -38,6 +39,7 @@ type Props = {
 const ReactionsBar = ({ messageId, reactions, context }: Props) => {
   const { channelId } = useParams<{ channelId: string }>();
   const queryClient = useQueryClient();
+  const { send } = useChannelRealtime();
 
   const toggleMutation = useMutation(
     orpc.message.reaction.toggle.mutationOptions({
@@ -130,7 +132,8 @@ const ReactionsBar = ({ messageId, reactions, context }: Props) => {
 
         return { previous, listKey };
       },
-      onSuccess: () => {
+      onSuccess: (data) => {
+        send({ type: 'reaction:updated', payload: data });
         return toast.success('Reaction toggled');
       },
       onError: (_err, _vars, ctx) => {

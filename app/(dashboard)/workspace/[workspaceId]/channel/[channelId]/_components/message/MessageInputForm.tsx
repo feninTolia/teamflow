@@ -26,6 +26,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import MessageComposer from './MessageComposer';
+import { useChannelRealtime } from '@/providers/ChannelRealtimeProvider';
 
 type Props = {
   channelId: string;
@@ -43,6 +44,7 @@ const MessageInputForm = ({ channelId, user }: Props) => {
   const queryClient = useQueryClient();
   const [editorKey, setEditorKey] = useState(0);
   const upload = useAttachmentUpload();
+  const { send } = useChannelRealtime();
 
   const form = useForm({
     resolver: zodResolver(createMessageSchema),
@@ -134,6 +136,8 @@ const MessageInputForm = ({ channelId, user }: Props) => {
         form.reset({ channelId, content: '' });
         upload.clear();
         setEditorKey((k) => k + 1);
+
+        send({ type: 'message:created', payload: { message: data } });
 
         return toast.success('Message sent successfully');
       },

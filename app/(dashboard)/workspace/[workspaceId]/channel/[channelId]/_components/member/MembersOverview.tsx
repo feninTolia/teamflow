@@ -7,18 +7,47 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { Skeleton } from '@/components/ui/skeleton';
+import { usePresence } from '@/hooks/use-presence';
 import { orpc } from '@/lib/orpc';
 import { useQuery } from '@tanstack/react-query';
 import { SearchIcon, UsersIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import MemberItem from './MemberItem';
-import { Skeleton } from '@/components/ui/skeleton';
+import { User } from '@/app/schemas/realtime';
 
 const MembersOverview = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
   const { data, isLoading, error } = useQuery(
     orpc.workspace.member.list.queryOptions(),
+  );
+
+  const params = useParams();
+  const workspaceId = params.workspaceId;
+
+  const { data: workspaceData } = useQuery(orpc.workspace.list.queryOptions());
+
+  const currentUser = useMemo(() => {
+    if (!workspaceData?.user) return null;
+
+    return {
+      id: workspaceData.user.id,
+      full_name: workspaceData.user.given_name,
+      email: workspaceData.user.email ?? '',
+      picture: workspaceData.user.picture,
+    } satisfies User;
+  }, [workspaceData]);
+
+  const { onlineUsers } = usePresence({
+    currentUser: currentUser,
+    room: `workspace-${workspaceId}`,
+  });
+
+  const onlineUsersIds = useMemo(
+    () => new Set(onlineUsers.map((u) => u.id)),
+    [onlineUsers],
   );
 
   if (error) {
@@ -85,7 +114,11 @@ const MembersOverview = () => {
               </p>
             ) : (
               filteredMembers?.map((member) => (
-                <MemberItem key={member.id} member={member} />
+                <MemberItem
+                  key={member.id}
+                  member={member}
+                  online={Boolean(member.id && onlineUsersIds.has(member.id))}
+                />
               ))
             )}
           </div>

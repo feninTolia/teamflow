@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import MessageComposer from '../message/MessageComposer';
+import { useChannelRealtime } from '@/providers/ChannelRealtimeProvider';
 
 type Props = {
   threadId: string;
@@ -31,6 +32,7 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
   const upload = useAttachmentUpload();
   const [editorKey, setEditorKey] = useState(0);
   const queryClient = useQueryClient();
+  const { send } = useChannelRealtime();
 
   const form = useForm({
     resolver: zodResolver(createMessageSchema),
@@ -111,6 +113,11 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
         form.reset({ channelId, content: '', threadId });
         upload.clear();
         setEditorKey((prev) => prev + 1);
+
+        send({
+          type: 'message:replies:increment',
+          payload: { messageId: threadId, delta: 1 },
+        });
         return toast.success('Message created successfully');
       },
 

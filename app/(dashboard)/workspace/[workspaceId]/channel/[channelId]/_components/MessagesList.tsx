@@ -201,7 +201,6 @@ const MessagesList = () => {
 
         <div ref={bottomRef}></div>
       </div>
-
       {isFetchingNextPage && (
         <div className="pointer-events-none absolute top-0 left-0 right-0 z-20 flex items-center justify-center py-2">
           <div className="flex items-center gap-2 rounded-3xl bg-linear-to-b from-card/80  to-card/20 px-4 py-2 backdrop-blur">
@@ -209,7 +208,6 @@ const MessagesList = () => {
           </div>
         </div>
       )}
-
       {!isAtBottom && (
         <Button
           type="button"
@@ -221,7 +219,6 @@ const MessagesList = () => {
           <ChevronsDownIcon className="size-5" />
         </Button>
       )}
-
       {isNewMessages && !isAtBottom ? (
         <Button
           type="button"

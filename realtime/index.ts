@@ -1,4 +1,5 @@
 import {
+  ChannelEventSchema,
   PresenceMessage,
   PresenceMessageSchema,
   UserSchema,
@@ -59,6 +60,15 @@ export class Chat extends Server {
           this.updateUsers();
           return;
         }
+      }
+
+      const channelEvent = ChannelEventSchema.safeParse(parsed);
+
+      if (channelEvent.success) {
+        const payload = JSON.stringify(channelEvent.data);
+
+        this.broadcast(payload, [connection.id]);
+        return;
       }
     } catch (error) {
       console.log('Error parsing message', error);
