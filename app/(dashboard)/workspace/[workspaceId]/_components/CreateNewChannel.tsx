@@ -29,7 +29,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PlusIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function CreateNewChannel() {
@@ -70,7 +70,7 @@ export default function CreateNewChannel() {
     createChannelMutation.mutate(values);
   }
 
-  const watchedName = form.watch('name');
+  const watchedName = useWatch({ control: form.control, name: 'name' });
   const transformedName = watchedName ? transformChannelName(watchedName) : '';
   return (
     <Dialog open={isOpen} onOpenChange={setisOpen}>

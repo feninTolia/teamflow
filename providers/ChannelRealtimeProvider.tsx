@@ -25,7 +25,7 @@ export const ChannelRealtimeProvider = ({ channelId, children }: Props) => {
   const queryClient = useQueryClient();
 
   const socket = usePartySocket({
-    host: 'http://localhost:8787',
+    host: 'https://teamflow-realtime.fenintolja.workers.dev',
     room: `channel-${channelId}`,
     party: 'chat',
     onMessage(e) {

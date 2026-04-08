@@ -21,6 +21,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import MessageComposer from '../message/MessageComposer';
 import { useChannelRealtime } from '@/providers/ChannelRealtimeProvider';
+import { useThreadRealTime } from '@/providers/ThreadRealtimeProvider';
 
 type Props = {
   threadId: string;
@@ -33,6 +34,7 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
   const [editorKey, setEditorKey] = useState(0);
   const queryClient = useQueryClient();
   const { send } = useChannelRealtime();
+  const { send: sendThread } = useThreadRealTime();
 
   const form = useForm({
     resolver: zodResolver(createMessageSchema),
@@ -105,7 +107,7 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
         return { listOptions, previous };
       },
 
-      onSuccess: (_data, _vars, ctx) => {
+      onSuccess: (data, _vars, ctx) => {
         queryClient.invalidateQueries({
           queryKey: ctx.listOptions.queryKey,
         });
@@ -113,6 +115,11 @@ export const ThreadReplyForm = ({ threadId, user }: Props) => {
         form.reset({ channelId, content: '', threadId });
         upload.clear();
         setEditorKey((prev) => prev + 1);
+
+        sendThread({
+          type: 'thread:reply:created',
+          payload: { reply: data },
+        });
 
         send({
           type: 'message:replies:increment',

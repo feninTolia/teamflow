@@ -74,3 +74,23 @@ export const ChannelEventSchema = z.union([
 ]);
 
 export type ChannelEvent = z.infer<typeof ChannelEventSchema>;
+
+//Thread Level Events
+
+export const ThreadEventSchema = z.union([
+  z.object({
+    type: z.literal('thread:reply:created'),
+    payload: z.object({ reply: RealtimeMessageSchema }),
+  }),
+
+  z.object({
+    type: z.literal('thread:reaction:updated'),
+    payload: z.object({
+      messageId: z.string(),
+      threadId: z.string(),
+      reactions: z.array(GroupedReactionSchema),
+    }),
+  }),
+]);
+
+export type ThreadEvent = z.infer<typeof ThreadEventSchema>;

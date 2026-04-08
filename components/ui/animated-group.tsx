@@ -1,6 +1,6 @@
 'use client';
 import { ReactNode } from 'react';
-import { motion, Variants } from 'motion/react';
+import { motion, type HTMLMotionProps, Variants } from 'motion/react';
 import React from 'react';
 
 export type PresetType =
@@ -15,6 +15,8 @@ export type PresetType =
   | 'rotate'
   | 'swing';
 
+type MotionTag = keyof typeof motion;
+
 export type AnimatedGroupProps = {
   children: ReactNode;
   className?: string;
@@ -23,8 +25,8 @@ export type AnimatedGroupProps = {
     item?: Variants;
   };
   preset?: PresetType;
-  as?: React.ElementType;
-  asChild?: React.ElementType;
+  as?: MotionTag;
+  asChild?: MotionTag;
 };
 
 const defaultContainerVariants: Variants = {
@@ -115,19 +117,17 @@ function AnimatedGroup({
   const containerVariants = variants?.container || selectedVariants.container;
   const itemVariants = variants?.item || selectedVariants.item;
 
-  const MotionComponent = React.useMemo(
-    () => motion.create(as as keyof JSX.IntrinsicElements),
-    [as]
-  );
-  const MotionChild = React.useMemo(
-    () => motion.create(asChild as keyof JSX.IntrinsicElements),
-    [asChild]
-  );
+  // Access pre-built motion components via the motion proxy (e.g. motion.div,
+  // motion.span) instead of calling motion.create() during render.
+  const MotionComponent = motion[as] as React.FC<HTMLMotionProps<typeof as>>;
+  const MotionChild = motion[asChild] as React.FC<
+    HTMLMotionProps<typeof asChild>
+  >;
 
   return (
     <MotionComponent
-      initial='hidden'
-      animate='visible'
+      initial="hidden"
+      animate="visible"
       variants={containerVariants}
       className={className}
     >

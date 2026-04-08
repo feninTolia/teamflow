@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { orpc } from '@/lib/orpc';
 import { MessageListItem } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { useChannelRealtime } from '@/providers/ChannelRealtimeProvider';
+import { useOptionalThreadRealTime } from '@/providers/ThreadRealtimeProvider';
 import {
   InfiniteData,
   useMutation,
@@ -11,7 +13,6 @@ import {
 import { useParams } from 'next/navigation';
 import { toast } from 'sonner';
 import EmojiReaction from './EmojiReaction';
-import { useChannelRealtime } from '@/providers/ChannelRealtimeProvider';
 
 type ThreadContext = {
   type: 'thread';
@@ -40,6 +41,7 @@ const ReactionsBar = ({ messageId, reactions, context }: Props) => {
   const { channelId } = useParams<{ channelId: string }>();
   const queryClient = useQueryClient();
   const { send } = useChannelRealtime();
+  const threadRealtime = useOptionalThreadRealTime();
 
   const toggleMutation = useMutation(
     orpc.message.reaction.toggle.mutationOptions({
@@ -134,6 +136,15 @@ const ReactionsBar = ({ messageId, reactions, context }: Props) => {
       },
       onSuccess: (data) => {
         send({ type: 'reaction:updated', payload: data });
+
+        if (context && context.type === 'thread' && threadRealtime) {
+          const threadId = context.threadId;
+
+          threadRealtime.send({
+            type: 'thread:reaction:updated',
+            payload: { ...data, threadId },
+          });
+        }
         return toast.success('Reaction toggled');
       },
       onError: (_err, _vars, ctx) => {

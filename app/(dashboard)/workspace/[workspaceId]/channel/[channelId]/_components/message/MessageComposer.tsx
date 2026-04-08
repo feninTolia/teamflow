@@ -3,7 +3,6 @@ import { ImageUploadModal } from '@/components/rich-text-editor/ImageUploadModal
 import { Button } from '@/components/ui/button';
 import { UseAttachmentUploadType } from '@/hooks/use-attachment-upload';
 import { ImageIcon, SendIcon } from 'lucide-react';
-import Image from 'next/image';
 import { AttachmentChip } from './AttachmentChip';
 
 type Props = {

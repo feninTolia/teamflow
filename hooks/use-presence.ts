@@ -15,7 +15,7 @@ export function usePresence({ room, currentUser }: Props) {
   const [onlineUsers, setOnlineUsers] = useState<User[]>([]);
 
   const socket = usePartySocket({
-    host: 'http://localhost:8787',
+    host: 'https://teamflow-realtime.fenintolja.workers.dev',
     room,
     party: 'chat',
     onOpen: () => {
