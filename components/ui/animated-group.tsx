@@ -1,7 +1,6 @@
 'use client';
-import { ReactNode } from 'react';
-import { motion, type HTMLMotionProps, Variants } from 'motion/react';
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { motion, Variants } from 'motion/react';
 
 export type PresetType =
   | 'fade'
@@ -15,8 +14,6 @@ export type PresetType =
   | 'rotate'
   | 'swing';
 
-type MotionTag = keyof typeof motion;
-
 export type AnimatedGroupProps = {
   children: ReactNode;
   className?: string;
@@ -25,8 +22,8 @@ export type AnimatedGroupProps = {
     item?: Variants;
   };
   preset?: PresetType;
-  as?: MotionTag;
-  asChild?: MotionTag;
+  as?: React.ElementType;
+  asChild?: React.ElementType;
 };
 
 const defaultContainerVariants: Variants = {
@@ -117,12 +114,12 @@ function AnimatedGroup({
   const containerVariants = variants?.container || selectedVariants.container;
   const itemVariants = variants?.item || selectedVariants.item;
 
-  // Access pre-built motion components via the motion proxy (e.g. motion.div,
-  // motion.span) instead of calling motion.create() during render.
-  const MotionComponent = motion[as] as React.FC<HTMLMotionProps<typeof as>>;
-  const MotionChild = motion[asChild] as React.FC<
-    HTMLMotionProps<typeof asChild>
-  >;
+  const MotionComponent = motion[
+    as as keyof typeof motion
+  ] as typeof motion.div;
+  const MotionChild = motion[
+    asChild as keyof typeof motion
+  ] as typeof motion.div;
 
   return (
     <MotionComponent

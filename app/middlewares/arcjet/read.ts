@@ -2,6 +2,7 @@ import arcjet, { slidingWindow } from '@/lib/arcjet';
 
 import { base } from '@/app/middlewares/base';
 import { KindeUser } from '@kinde-oss/kinde-auth-nextjs';
+import { ArcjetNextRequest } from '@arcjet/next';
 
 const buildStandartAj = () =>
   arcjet.withRule(
@@ -9,12 +10,12 @@ const buildStandartAj = () =>
       mode: 'LIVE',
       interval: '1m',
       max: 180,
-    })
+    }),
   );
 
 export const readSecurityMiddleware = base
   .$context<{
-    request: Request;
+    request: Request | ArcjetNextRequest;
     user: KindeUser<Record<string, unknown>>;
   }>()
   .middleware(async ({ context, next, errors }) => {

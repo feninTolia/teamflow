@@ -2,13 +2,14 @@ import arcjet, { detectBot, shield } from '@/lib/arcjet';
 
 import { base } from '@/app/middlewares/base';
 import { KindeUser } from '@kinde-oss/kinde-auth-nextjs';
+import { ArcjetNextRequest } from '@arcjet/next';
 
 const buildStandartAj = () =>
   arcjet
     .withRule(
       shield({
         mode: 'LIVE',
-      })
+      }),
     )
     .withRule(
       detectBot({
@@ -18,12 +19,12 @@ const buildStandartAj = () =>
           'CATEGORY:PREVIEW',
           'CATEGORY:MONITOR',
         ],
-      })
+      }),
     );
 
 export const standardSecurityMiddleware = base
   .$context<{
-    request: Request;
+    request: Request | ArcjetNextRequest;
     user: KindeUser<Record<string, unknown>>;
   }>()
   .middleware(async ({ context, next, errors }) => {
