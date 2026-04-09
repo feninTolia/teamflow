@@ -49,9 +49,10 @@ export default createMiddleware(
   aj,
   withAuth(existingMiddleware, {
     publicPaths: ['/', '/api/uploadthing'],
-  }) as NextMiddleware
+  }) as NextMiddleware,
 );
 
 export const config = {
   matcher: ['/((?!_next/static|_next/image|favicon.ico|/rpc).*)'],
+  runtime: 'nodejs',
 };
